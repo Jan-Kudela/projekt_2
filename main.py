@@ -13,7 +13,9 @@ def secret_number_gen():
     while True:
         secret_num = random.sample(range(10), 4)
         if secret_num[0] != 0:
-            secret_num_complete = "".join(str(number) for number in secret_num) 
+            secret_num_complete = "".join(
+                str(number) for number in secret_num
+                )
         return secret_num_complete
 
 
@@ -29,13 +31,13 @@ def print_intro_text():
     line_printer()
 
 
-def player_number_input(used_numbers):
+def player_number_input(used_numbers: set):
     while True:
         player_number = input("Enter a number: ")
         if not player_number.isdigit():
-            print("Your have to enter number.")
+            print("You have to enter number.")
         elif len(player_number) != 4:
-            print("Your number have to be 4 digits long.")
+            print("Your number has to be 4 digits long.")
         elif player_number[0] == "0":
             print("Your number can´t begin with 0 .")
         elif player_number in used_numbers:
@@ -46,20 +48,29 @@ def player_number_input(used_numbers):
             return player_number                    
 
 
-def bulls_cows_counter(b,c):
+def bulls_cows_counter(guess,secret):
     bulls = 0
     cows = 0
     for letter in range(4):
-        if b[letter] == c[letter]:
+        if guess[letter] == secret[letter]:
             bulls += 1
-        elif b[letter] != c[letter] and b[letter] in c:
+        elif guess[letter] != secret[letter] and guess[letter] in secret:
             cows += 1
     return bulls, cows
 
 
+def result_printer(res1,res2):
+    plur = inflect.engine()
+    word_1 = "bull"
+    word_2 = "cow"
+
+    print(f"{res1} {plur.plural(word_1,res1)}," 
+        f" {res2} {plur.plural(word_2,res2)}")
+    
+
 def main_game():
     secret_number = secret_number_gen()
-    print(secret_number)
+    #print(secret_number) - only for testing
     player_nr = str()
     attempts = 1
     used_numbers = set()
@@ -74,8 +85,8 @@ def main_game():
         if player_nr == secret_number:
             elapsed = time.perf_counter() - start
             print(f"Correct, you´ve guessed the"
-            f"right number in {attempts} guesses!")
-            print(f"It tooks {elapsed:.2f} seconds.")
+            f" right number in {attempts} guesses!")
+            print(f"It took {elapsed:.2f} seconds.")
             break
         
         else:
@@ -83,12 +94,7 @@ def main_game():
             used_numbers.add(player_nr)
             result = bulls_cows_counter(player_nr,secret_number)
                 
-            plur = inflect.engine()
-            word_1 = "bull"
-            word_2 = "cow"
-
-            print(f"{result[0]} {plur.plural(word_1,result[0])}," 
-                  f"{result[1]} {plur.plural(word_2,result[1])}")
+            result_printer(result[0],result[1])
 
 
 if __name__ == "__main__":
