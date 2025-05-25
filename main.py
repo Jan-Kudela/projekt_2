@@ -10,20 +10,23 @@ import inflect
 import time
 
 def secret_number_gen():
+    """Return 4 digits number without 0 as first digit"""
     while True:
         secret_num = random.sample(range(10), 4)
         if secret_num[0] != 0:
             secret_num_complete = "".join(
                 str(number) for number in secret_num
                 )
-        return secret_num_complete
+            return secret_num_complete
 
 
 def line_printer():
+    """Prints aseparator line"""
     print(45 * "-")
 
 
 def print_intro_text():
+    """Prints intro text with basic info about game"""
     print("Hi there!")
     line_printer()    
     print("I've generated a random 4 digit number for you.")
@@ -32,6 +35,9 @@ def print_intro_text():
 
 
 def player_number_input(used_numbers: set):
+    """Returns 4 digits number without 0 as first digit,
+        prints message if number was just used or
+        if contains duplicate digits. """
     while True:
         player_number = input("Enter a number: ")
         if not player_number.isdigit():
@@ -49,6 +55,7 @@ def player_number_input(used_numbers: set):
 
 
 def bulls_cows_counter(guess,secret):
+    """Returns number of bulls and cows"""
     bulls = 0
     cows = 0
     for letter in range(4):
@@ -60,6 +67,7 @@ def bulls_cows_counter(guess,secret):
 
 
 def result_printer(res1,res2):
+    """Prints result with correct plural grammar"""
     plur = inflect.engine()
     word_1 = "bull"
     word_2 = "cow"
@@ -77,8 +85,9 @@ def main_game():
     start = time.perf_counter()
 
     print_intro_text()
-
+    
     while secret_number != player_nr:
+    
         player_nr = player_number_input(used_numbers)
         line_printer()
         
