@@ -34,24 +34,23 @@ def print_intro_text():
     line_printer()
 
 
-def player_number_input(used_numbers: set):
+def player_number_input(player_number: str, used_numbers: set):
     """Returns 4 digits number without 0 as first digit,
         prints message if number was just used or
-        if contains duplicate digits. """
-    while True:
-        player_number = input("Enter a number: ")
-        if not player_number.isdigit():
-            print("You have to enter number.")
-        elif len(player_number) != 4:
-            print("Your number has to be 4 digits long.")
-        elif player_number[0] == "0":
-            print("Your number can´t begin with 0 .")
-        elif player_number in used_numbers:
-            print("You have already used this number.")
-        elif len(set(player_number)) < 4:
-            print("Your number contains duplicate digits.")
-        else:
-            return player_number                    
+        if contains duplicate digits etc."""
+    
+    if not player_number.isdigit():
+        print("You have to enter number.")
+    elif len(player_number) != 4:
+        print("Your number has to be 4 digits long.")
+    elif player_number[0] == "0":
+        print("Your number can´t begin with 0 .")
+    elif player_number in used_numbers:
+        print("You have already used this number.")
+    elif len(set(player_number)) < 4:
+        print("Your number contains duplicate digits.")
+    else:
+        return player_number                    
 
 
 def bulls_cows_counter(guess,secret):
@@ -79,7 +78,7 @@ def result_printer(res1,res2):
 def main_game():
     secret_number = secret_number_gen()
     #print(secret_number) - only for testing
-    player_nr = str()
+    player_nr = None
     attempts = 1
     used_numbers = set()
     start = time.perf_counter()
@@ -87,9 +86,10 @@ def main_game():
     print_intro_text()
     
     while secret_number != player_nr:
-    
-        player_nr = player_number_input(used_numbers)
-        line_printer()
+        while player_nr == None:
+            player_guess = input("Enter a number: ")
+            player_nr = player_number_input(player_guess,used_numbers)
+            line_printer()  
         
         if player_nr == secret_number:
             elapsed = time.perf_counter() - start
@@ -97,14 +97,14 @@ def main_game():
             f" right number in {attempts} guesses!")
             print(f"It took {elapsed:.2f} seconds.")
             break
-        
+            
         else:
             attempts += 1
             used_numbers.add(player_nr)
             result = bulls_cows_counter(player_nr,secret_number)
-                
+                    
             result_printer(result[0],result[1])
-
+            player_nr = None
 
 if __name__ == "__main__":
     main_game()
